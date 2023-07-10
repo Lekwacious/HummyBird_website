@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:the_basis/views/widgets/course_details_widget/course_details.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+import 'package:the_basis/views/home/home_content_desktop.dart';
+import 'package:the_basis/views/home/home_content_mobile.dart';
 import 'package:the_basis/views/widgets/navigation_bar/navigation_bar.dart';
+import 'package:the_basis/views/widgets/navigation_drawer/navigation_drawer.dart';
 
-import '../widgets/call_to_action/call_to_action.dart';
 import '../widgets/center_view/center_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -10,23 +12,27 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: CenterView(
-        child: Column(
-          children: [
-            NavigationBars(),
-            Expanded(
-                child: Row(
-              children:  <Widget>[
-                CourseDetails(),
-                Expanded(child: Center(child: CallToAction('Join Course'),)
-                ),
+    return ResponsiveBuilder(
+      builder:(context, sizingInformation){
+        return Scaffold(
+          drawer: sizingInformation.deviceScreenType == DeviceScreenType.mobile? NavigationDrawer(): null,
+          backgroundColor: Colors.white,
+          body: CenterView(
+            child: Column(
+              children: [
+                NavigationBars(),
+                Expanded(
+                    child: ScreenTypeLayout.builder(
+                      mobile: (context) => const HomeContentMobile(),
+
+                      desktop: (context) => const HomeContentDesktop(),
+                    )
+                )
               ],
-            ))
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
